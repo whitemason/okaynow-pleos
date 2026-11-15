@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        권한은 대장 승인분만 선언한다(CLAUDE.md 규칙 2, 2026-11-03 승인).
+        Vehicle AAR이 ai.pleos.playground.service.vehicle.VEHICLE_BINDING을 자동 병합한다.
+    -->
+    <!-- Brake.*BrakePedalStatus, Gear.*GearSelection -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <!-- Door.*DoorPosition -->
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />
+    <!-- Safety: SeatAirbagDeployed, PowerDownWarningIndicator, getTelltalesInfo (TPMS 포함) -->
+    <uses-permission android:name="pleos.car.permission.CAR_SAFETY" />
+    <!-- Light.*LowBeam/HighBeam/TailLamp/FrontFog/RearFogLightState (2026-11-04 승인) -->
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />
+    <!-- Gleo TTS·STT, ON_DEVICE 모드 (2026-11-04 승인). AAR이 INTERNET을 자동 병합 -->
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+    <!-- Gleo LLM ON_DEVICE: C8 접수 요약 문장 (2026-11-05 승인, App Market 승인 여부 미확인) -->
+    <uses-permission android:name="pleos.car.permission.LLM_SERVICE" />
+    <!-- FusedLocation: C3 현재 위치 낭독 (dangerous, 런타임 요청, 2026-11-04 승인) -->
+    <uses-permission android:name="pleos.car.permission.FUSED_LOCATION" />
+    <!-- NaviHelper.getCurrentLocationInfo: C3 주소 안내 (2026-11-04 승인) -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <!-- AAOS CarPropertyManager PERF_VEHICLE_SPEED (Pleos 심사 승인 여부 미확인) -->
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+    <!-- DetectionService: 주행 중 백그라운드 사고 감시 (2026-11-04 승인) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- 상주 알림, 충격 감지 헤드업 알림 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.DetectionService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="주행 중 차량 신호(속도·브레이크·기어·도어·안전 경고)로 사고 충격을 감지해 운전자 안내를 시작" />
+        </service>
+    </application>
+</manifest>

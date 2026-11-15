@@ -1,0 +1,17 @@
+# Gradle / Android Studio
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+
+# 비밀값 (CLAUDE.md 규칙 7)
+.env
+.env.*
+*.keystore
+*.jks
